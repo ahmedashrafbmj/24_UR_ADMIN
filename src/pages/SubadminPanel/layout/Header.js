@@ -1,24 +1,20 @@
-import React, { useEffect, useState } from 'react'
-import { FaBeer } from 'react-icons/fa';
+import React, { useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import {
-
     Link, useLocation, useNavigate
 } from "react-router-dom";
 import { navbartoggle } from "../../../Redux/Action/ActionFunction";
 
-import { MdKeyboardArrowRight } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import CloseButton from 'react-bootstrap/CloseButton';
 
 import { AiFillCloseCircle } from "react-icons/ai";
 
-import Baseurl from '../../../Baseurl/Baseurl';
 import { toast } from 'react-toastify';
+import Baseurl from '../../../Baseurl/Baseurl';
 
 // import Avartarimg from "../../../app-assets/images/portrait/small/avatar-s-19.png"
 
@@ -508,7 +504,7 @@ const Header = () => {
                             theme: "light",
                         });
                         setShow(false)
-                        localStorage.setItem("SubAdminToken",result.token)
+                        localStorage.setItem("SubAdminToken", result.token)
                     }
                     else {
                         setShow(false)
@@ -526,9 +522,9 @@ const Header = () => {
 
                 }
                 )
-                .catch(error =>{
+                .catch(error => {
                     setShow(false)
-                 console.log('error', error)
+                    console.log('error', error)
                 });
 
         }
@@ -541,8 +537,8 @@ const Header = () => {
 
     }
 
-
-
+    const UserStatus = localStorage.getItem("Userstatus")
+    console.log(UserStatus, "Userstatus")
     return (
         <>
 
@@ -944,38 +940,36 @@ const Header = () => {
                                 
                             </li> */}
                             {/* mt-3 add kia hai white-line  */}
-                            <li className=" nav-item mt-3">
-                                <Link to={"/hospital/dashboard"} >
-                                    <a>
-                                        <i className="la la-home" />
+                            <li className=" nav-item mt-3"  >
+                                <Link to={UserStatus === "true" ? "/hospital/dashboard" : ""} >
+                                    <i className="la la-home" />
 
-                                        <span className="menu-title" >Dashboard</span>
-                                    </a>
+                                    <span className="menu-title" >Dashboard</span>
 
                                 </Link>
 
                             </li>
 
-                                        <li className=" nav-item">
-                                            <a onClick={() => Navigate('/hospital/adduser')} >
-                                                <i className="la la-user" />
+                            <li className=" nav-item">
+                                <a onClick={() => Navigate(UserStatus === "true" ? '/hospital/adduser' : "")} >
+                                    <i className="la la-user" />
 
-                                                <span className="menu-title" >Staff</span>
-                                            </a>
+                                    <span className="menu-title" >Staff</span>
+                                </a>
 
-                                        </li>
+                            </li>
 
-                                        <li className=" nav-item">
-                                            {/* <Link to={"/profile"} > */}
-                                            <a onClick={() => Navigate('/hospital/profile')} >
-                                                <i className="la la-user" />
+                            <li className=" nav-item">
+                                {/* <Link to={"/profile"} > */}
+                                <a onClick={() => Navigate(UserStatus === "true" ?'/hospital/profile' : "")} >
+                                    <i className="la la-user" />
 
-                                                <span className="menu-title" >Profile</span>
-                                            </a>
+                                    <span className="menu-title" >Profile</span>
+                                </a>
 
-                                            {/* </Link> */}
+                                {/* </Link> */}
 
-                                        </li>
+                            </li>
                             <li className=" nav-item">
 
                                 <a onClick={logout} >

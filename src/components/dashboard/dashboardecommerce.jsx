@@ -1,351 +1,380 @@
-import React, { useState, useEffect } from 'react'
-import Pricing from '../Pricing/Pricing';
-import Baseurl from '../../Baseurl/Baseurl';
-import { toast } from 'react-toastify';
-import { Link, useParams } from 'react-router-dom';
-import StripeCheckout from 'react-stripe-checkout';
+import React, { useState, useEffect } from "react";
+import Pricing from "../Pricing/Pricing";
+import Baseurl from "../../Baseurl/Baseurl";
+import { toast } from "react-toastify";
+import { Link, useParams } from "react-router-dom";
+import StripeCheckout from "react-stripe-checkout";
 
 const Dashboardecommerce = ({ Role }) => {
-    const PackageId = localStorage.getItem("PackageId")
-    // console.log("textToCopy ==>",textToCopy )
+  const PackageId = localStorage.getItem("PackageId");
+  // console.log("textToCopy ==>",textToCopy )
 
-    // const Dashboardecommerce = ({ Role ,textToCopy }) => {
+  // const Dashboardecommerce = ({ Role ,textToCopy }) => {
 
-    //     console.log("textToCopy ==>",textToCopy )
+  //     console.log("textToCopy ==>",textToCopy )
 
-    const [isHovering, setIsHovering] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
 
-    const [CategoryData, SetCategoryData] = useState([])
-    const [CounterData, SetCounterData] = useState()
-    const [UserCount, setUserCount] = useState('')
-    const Token = localStorage.getItem("AdminToken")
-    const SubAdminToken = localStorage.getItem("SubAdminToken")
+  const [CategoryData, SetCategoryData] = useState([]);
+  const [CounterData, SetCounterData] = useState();
+  const [UserCount, setUserCount] = useState("");
+  const Token = localStorage.getItem("AdminToken");
+  const SubAdminToken = localStorage.getItem("SubAdminToken");
 
-    const [loader, setloader] = useState(false)
+  const [loader, setloader] = useState(false);
 
-    console.log("role=SuperAdmin", Role)
-    const paymentStripe = () => {
-        // e.preventDefault()
-        // console.log("click")
-        let a = document.getElementById('paymentmethod')
-        a.children[0].click()
-        // a.children[0].click()
-    }
+  console.log("role=SuperAdmin", Role);
+  const paymentStripe = () => {
+    // e.preventDefault()
+    // console.log("click")
+    let a = document.getElementById("paymentmethod");
+    GetRole()
+    a.children[0].click();
+    // a.children[0].click()
+  };
 
-    useEffect(() => {
+  useEffect(() => {
+    GetCategoryData();
+    GetRole()
+   
+    // GetDataCounter()
+  }, []);
+  useEffect(() => {
+    if (PackageId != "undefined") {
+        paymentStripe();
+      }   
+    // GetDataCounter()
+  }, []);
 
-        GetCategoryData()
-        paymentStripe()
-        // GetDataCounter()
+  const onToken = (token) => {
+    console.log("my stripe token==>", token);
+    console.log("id to pas", token.id);
+    BuyPackage(token.id, "stripe");
+  };
+  const BuyPackage = (stripeid) => {
+    console.log("stripeid", stripeid);
 
-    }, [])
+    // api call
+    let formdata = new FormData();
+    formdata.append("packageid", PackageId);
+    formdata.append("token", stripeid);
 
-    
-    const onToken = (token) => {
-        console.log("my stripe token==>", token)
-        console.log("id to pas", token.id)
-        BuyPackage(token.id, "stripe")
-    }
-    const BuyPackage = (stripeid) => {
-        console.log("stripeid", stripeid)
+    var requestOptions = {
+      method: "POST",
 
-        // api call
-        let formdata = new FormData();
-        formdata.append("packageid", PackageId);
-        formdata.append("token", stripeid);
+      headers: {
+        Authorization: "Bearer " + SubAdminToken,
+      },
+      body: formdata,
+      redirect: "follow",
+    };
+    setloader(true);
+    // "https://pyurelyecommerce.pythonanywhere.com/api/categorys"
+    fetch(`${Baseurl.BaseUrlVariable}/subscription`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        setloader(false);
+        if (result.status == true) {
+          console.log("stripapi==> ===>", result);
 
+          // navigate("/subadmin/login")
 
-        var requestOptions = {
-            method: 'POST',
+          toast.success(result.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
 
-            headers: {
-                Authorization: "Bearer " + SubAdminToken
-            },
-            body: formdata,
-            redirect: 'follow'
-        };
-        setloader(true)
-        // "https://pyurelyecommerce.pythonanywhere.com/api/categorys"
-        fetch(`${Baseurl.BaseUrlVariable}/subscription`, requestOptions)
-            .then(response => response.json())
-            .then(result => {
+          // setProfileImage('')
+          // setSelectProfileImage('')
+          // Navigate('/addcustomer')
+        } else {
+          setloader(false);
+          toast.error(result.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
 
-                setloader(false)
-                if (result.status == true) {
+    //api call end
+  };
 
+  // const handleCopyClick = async () => {
+  //     try {
+  //         await navigator.clipboard.writeText(textToCopy);
+  //         console.log('Text copied to clipboard');
+  //     } catch (err) {
+  //         console.error('Failed to copy text: ', err);
+  //     }
+  // }
 
-                    console.log("stripapi==> ===>", result)
+  // const GetDataCounter = () =>{
 
-                    // navigate("/subadmin/login")
+  //     if(Role == "Admin")
+  //     {
 
-                    toast.success(result.message, {
-                        position: "top-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                    });
+  //     var requestOptions = {
+  //         method: 'GET',
+  //         headers: {
+  //             Authorization: "Bearer " + Token
+  //         },
+  //         redirect: 'follow'
+  //     };
+  //     setloader(true)
 
-                    // setProfileImage('')
-                    // setSelectProfileImage('')
-                    // Navigate('/addcustomer')
+  //     fetch(`${Baseurl.baseUrl}/superadmin/dashboard`, requestOptions)
+  //         .then(response => response.json())
+  //         .then(result => {
+  //             if (result.status == true) {
+  //                 setloader(false)
+  //                 console.log("counterdata==>",result)
+  //                 SetCounterData(result)
+  //             }
+  //             else {
+  //                 // setLoader(true)
+  //                 setloader(false)
+  //                 console.log("result.message", result.message)
+  //                 toast.error(result.message, {
+  //                     position: "top-right",
+  //                     autoClose: 5000,
+  //                     hideProgressBar: false,
+  //                     closeOnClick: true,
+  //                     pauseOnHover: true,
+  //                     draggable: true,
+  //                     progress: undefined,
+  //                     theme: "light",
+  //                 });
 
+  //             }
 
-                }
-                else {
-                    setloader(false)
-                    toast.error(result.message, {
-                        position: "top-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                    });}
+  //         }
+  //             // console.log("result",result)
+  //         )
+  //         .catch(error => {
+  //             setloader(false)
+  //             console.log('error', error)
+  //         }
+
+  //         );
+
+  //     }
+
+  // }
+const GetRole = () =>{
+  var formdata = new FormData();
+  formdata.append("email", localStorage.getItem("Useremail"));
+  var requestOptions = {
+    method: 'POST',
+    headers: {
+        Accept: 'application/json'
+    },
+    body: formdata,
+    redirect: 'follow'
+};
+  
+  setloader(true);
+
+  fetch(`${Baseurl.baseUrl}/subadmin/status`, requestOptions)
+    .then((response) => response.json())
+    .then((result) => {
+      // alert(result)
+      localStorage.setItem('Userstatus', result.sub_status);
+      console.log(result.sub_status,"result.sub_status")
+      if (result.status == true) {
+        setloader(false);
+
+        SetCategoryData(result);
+      } else {
+        setloader(false);
+        console.log("result.message", result.message);
+        toast.error(result.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    })
+    .catch((error) => {
+      setloader(false);
+      console.log("error", error);
+    }); 
+}
+  const GetCategoryData = () => {
+    if (Role == "Admin") {
+      var requestOptions = {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + Token,
+        },
+        redirect: "follow",
+      };
+      setloader(true);
+
+      fetch(`${Baseurl.baseUrl}/superadmin/dashboard`, requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.status == true) {
+            setloader(false);
+            SetCategoryData(result);
+          } else {
+            setloader(false);
+            console.log("result.message", result.message);
+            toast.error(result.message, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          }
+        })
+        .catch((error) => {
+          setloader(false);
+          console.log("error", error);
+        });
+    } else if (Role == "Subadmin") {
+      var requestOptions = {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + SubAdminToken,
+        },
+        redirect: "follow",
+      };
+      setloader(true);
+
+      fetch(`${Baseurl.BaseUrlVariable}/dashboard`, requestOptions)
+        .then((response) => response.json())
+        .then(
+          (result) => {
+            if (result.status == true) {
+              console.log(" User counter==>", result);
+              setloader(false);
+              SetCategoryData(result.data);
+              setUserCount(result.user);
+            } else {
+              // setLoader(true)
+              setloader(false);
+              console.log("result.message", result.message);
+              toast.error(result.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
             }
-            )
-            .catch(error => {
-                console.log('error', error)}
-
-            );
-
-        //api call end
-
+          }
+          // console.log("result",result)
+        )
+        .catch((error) => {
+          setloader(false);
+          console.log("error", error);
+        });
     }
+  };
 
-    // const handleCopyClick = async () => {
-    //     try {
-    //         await navigator.clipboard.writeText(textToCopy);
-    //         console.log('Text copied to clipboard');
-    //     } catch (err) {
-    //         console.error('Failed to copy text: ', err);
-    //     }
-    // }
+  return (
+    <div class="app-content content">
+      <div class="content-wrapper">
+        <div class="content-header row"></div>
+        <div class="content-body">
+          {/* prcing Cards */}
 
-    // const GetDataCounter = () =>{
-
-    //     if(Role == "Admin")
-    //     {
-
-    //     var requestOptions = {
-    //         method: 'GET',
-    //         headers: {
-    //             Authorization: "Bearer " + Token
-    //         },
-    //         redirect: 'follow'
-    //     };
-    //     setloader(true)
-
-    //     fetch(`${Baseurl.baseUrl}/superadmin/dashboard`, requestOptions)
-    //         .then(response => response.json())
-    //         .then(result => {
-    //             if (result.status == true) {
-    //                 setloader(false)
-    //                 console.log("counterdata==>",result)
-    //                 SetCounterData(result)
-    //             }
-    //             else {
-    //                 // setLoader(true)
-    //                 setloader(false)
-    //                 console.log("result.message", result.message)
-    //                 toast.error(result.message, {
-    //                     position: "top-right",
-    //                     autoClose: 5000,
-    //                     hideProgressBar: false,
-    //                     closeOnClick: true,
-    //                     pauseOnHover: true,
-    //                     draggable: true,
-    //                     progress: undefined,
-    //                     theme: "light",
-    //                 });
-
-    //             }
-
-    //         }
-    //             // console.log("result",result)
-    //         )
-    //         .catch(error => {
-    //             setloader(false)
-    //             console.log('error', error)
-    //         }
-
-    //         );
-
-    //     }
-
-
-
-
-    // }
-
-    const GetCategoryData = () => {
-
-        if (Role == "Admin") {
-            var requestOptions = {
-                method: 'GET',
-                headers: {
-                    Authorization: "Bearer " + Token
-                },
-                redirect: 'follow'
-            };
-            setloader(true)
-
-            fetch(`${Baseurl.baseUrl}/superadmin/dashboard`, requestOptions)
-
-                .then(response => response.json())
-                .then(result => {
-                    if (result.status == true) {
-                        setloader(false)
-                        SetCategoryData(result)
-                    }
-                    else {
-                        setloader(false)
-                        console.log("result.message", result.message)
-                        toast.error(result.message, {
-                            position: "top-right",
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "light",
-                        });
-                    }
-                }
-                )
-                .catch(error => {
-                    setloader(false)
-                    console.log('error', error)
-                }
-
-                );
-
-        }
-
-        else if (Role == "Subadmin") {
-            var requestOptions = {
-                method: 'GET',
-                headers: {
-                    Authorization: "Bearer " + SubAdminToken
-                },
-                redirect: 'follow'
-            };
-            setloader(true)
-
-            fetch(`${Baseurl.BaseUrlVariable}/dashboard`, requestOptions)
-
-                .then(response => response.json())
-                .then(result => {
-                    if (result.status == true) {
-                        console.log(" User counter==>", result)
-                        setloader(false)
-                        SetCategoryData(result.data)
-                        setUserCount(result.user)
-                    }
-                    else {
-                        // setLoader(true)
-                        setloader(false)
-                        console.log("result.message", result.message)
-                        toast.error(result.message, {
-                            position: "top-right",
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "light",
-                        });
-
-                    }
-
-                }
-                    // console.log("result",result)
-                )
-                .catch(error => {
-                    setloader(false)
-                    console.log('error', error)
-                }
-
-                );
-
-        }
-    }
-
-
-    return (
-
-        <div class="app-content content">
-            <div class="content-wrapper">
-                <div class="content-header row">
-                </div>
-                <div class="content-body">
-
-                    {/* prcing Cards */}
-
-                    {
-                        Role == "Admin" ?
-
-                            <>
-                                {/* <button onClick={handleCopyClick}>
+          {Role == "Admin" ? (
+            <>
+              {/* <button onClick={handleCopyClick}>
                                     Copy to Clipboard
                                 </button> */}
 
-                                {/* eCommerce statistic */}
-                                <div className="row">
-
-                                    <div className="col-xl-4 col-lg-4 col-12">
-                                        <Link to="/addsubadmin" >
-                                            <div className="card pull-up">
-                                                <div className="card-content">
-                                                    <div className="card-body" style={{ height: 200 }}>
-                                                        <div className="media d-flex">
-                                                            <div className="media-body text-center " style={{ marginTop: 50 }}>
-                                                                <h2 className="info">Total Hospitals : {CategoryData?.subadmin}</h2>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    </div>
-                                    <div className="col-xl-4 col-lg-4 col-12">
-                                        <Link to="/adduser">
-                                            <div className="card pull-up">
-                                                <div className="card-content">
-                                                    <div className="card-body" style={{ height: 200 }}>
-                                                        <div className="media d-flex">
-                                                            <div className="media-body text-center " style={{ marginTop: 50 }}>
-                                                                <h2 className="info">Total Staffs :  {CategoryData?.user}</h2>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    </div>
-                                    <div className="col-xl-4 col-lg-4 col-12">
-                                        <Link to="/addpackage" >
-                                            <div className="card pull-up">
-                                                <div className="card-content">
-                                                    <div className="card-body" style={{ height: 200 }}>
-                                                        <div className="media d-flex">
-                                                            <div className="media-body text-center " style={{ marginTop: 50 }}>
-                                                                <h2 className="info">Total Packages : {CategoryData?.packages}</h2>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    </div>
-                                    {/* <div className="col-xl-6 col-lg-6 col-12">
+              {/* eCommerce statistic */}
+              <div className="row">
+                <div className="col-xl-4 col-lg-4 col-12">
+                  <Link to="/addsubadmin">
+                    <div className="card pull-up">
+                      <div className="card-content">
+                        <div className="card-body" style={{ height: 200 }}>
+                          <div className="media d-flex">
+                            <div
+                              className="media-body text-center "
+                              style={{ marginTop: 50 }}
+                            >
+                              <h2 className="info">
+                                Total Hospitals : {CategoryData?.subadmin}
+                              </h2>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+                <div className="col-xl-4 col-lg-4 col-12">
+                  <Link to="/adduser">
+                    <div className="card pull-up">
+                      <div className="card-content">
+                        <div className="card-body" style={{ height: 200 }}>
+                          <div className="media d-flex">
+                            <div
+                              className="media-body text-center "
+                              style={{ marginTop: 50 }}
+                            >
+                              <h2 className="info">
+                                Total Staffs : {CategoryData?.user}
+                              </h2>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+                <div className="col-xl-4 col-lg-4 col-12">
+                  <Link to="/addpackage">
+                    <div className="card pull-up">
+                      <div className="card-content">
+                        <div className="card-body" style={{ height: 200 }}>
+                          <div className="media d-flex">
+                            <div
+                              className="media-body text-center "
+                              style={{ marginTop: 50 }}
+                            >
+                              <h2 className="info">
+                                Total Packages : {CategoryData?.packages}
+                              </h2>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+                {/* <div className="col-xl-6 col-lg-6 col-12">
                             <div className="card pull-up">
                                 <div className="card-content">
                                     <div className="card-body">
@@ -362,7 +391,7 @@ const Dashboardecommerce = ({ Role }) => {
                                 </div>
                             </div>
                         </div> */}
-                                    {/* <div className="col-xl-3 col-lg-6 col-12">
+                {/* <div className="col-xl-3 col-lg-6 col-12">
                             <div className="card pull-up">
                                 <div className="card-content">
                                     <div className="card-body">
@@ -396,14 +425,12 @@ const Dashboardecommerce = ({ Role }) => {
                                 </div>
                             </div>
                         </div> */}
-                                </div>
-                                {/*/ eCommerce statistic */}
+              </div>
+              {/*/ eCommerce statistic */}
 
+              {/* get packages start */}
 
-
-                                {/* get packages start */}
-
-                                {/* <div className="row mt-2">
+              {/* <div className="row mt-2">
 
 
                                     {
@@ -438,36 +465,31 @@ const Dashboardecommerce = ({ Role }) => {
 
                                 </div> */}
 
-                                {/* get packages end */}
-
-
-                            </>
-
-                            :
-
-                            Role == "Subadmin" ?
-
-
-
-                                <>
-                                    {/* eCommerce statistic */}
-                                    <div className="row">
-                                        <div className="col-xl-6 col-lg-6 col-12">
-                                            <Link to="/subadmin/adduser">
-                                            <div className="card pull-up">
-                                                <div className="card-content">
-                                                    <div className="card-body" style={{ height: 200 }}>
-                                                        <div className="media d-flex">
-                                                            <div className="media-body text-center " style={{ marginTop: 50 }}>
-                                                                <h2 className="info">Staffs : {UserCount} </h2>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            </Link>
-                                        </div>
-                                        {/* <div className="col-xl-6 col-lg-6 col-12">
+              {/* get packages end */}
+            </>
+          ) : Role == "Subadmin" ? (
+            <>
+              {/* eCommerce statistic */}
+              <div className="row">
+                <div className="col-xl-6 col-lg-6 col-12">
+                  <Link to="/subadmin/adduser">
+                    <div className="card pull-up">
+                      <div className="card-content">
+                        <div className="card-body" style={{ height: 200 }}>
+                          <div className="media d-flex">
+                            <div
+                              className="media-body text-center "
+                              style={{ marginTop: 50 }}
+                            >
+                              <h2 className="info">Staffs : {UserCount} </h2>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+                {/* <div className="col-xl-6 col-lg-6 col-12">
                                     <div className="card pull-up">
                                         <div className="card-content">
                                             <div className="card-body" style={{ height: 200 }}>
@@ -481,7 +503,7 @@ const Dashboardecommerce = ({ Role }) => {
                                     </div>
                                     
                                 </div> */}
-                                        {/* <div className="col-xl-6 col-lg-6 col-12">
+                {/* <div className="col-xl-6 col-lg-6 col-12">
                         <div className="card pull-up">
                             <div className="card-content">
                                 <div className="card-body">
@@ -498,7 +520,7 @@ const Dashboardecommerce = ({ Role }) => {
                             </div>
                         </div>
                     </div> */}
-                                        {/* <div className="col-xl-3 col-lg-6 col-12">
+                {/* <div className="col-xl-3 col-lg-6 col-12">
                         <div className="card pull-up">
                             <div className="card-content">
                                 <div className="card-body">
@@ -532,40 +554,26 @@ const Dashboardecommerce = ({ Role }) => {
                             </div>
                         </div>
                     </div> */}
-                                    </div>
-                                    {/*/ eCommerce statistic */}
+              </div>
+              {/*/ eCommerce statistic */}
+            </>
+          ) : null}
 
-                                </>
+          {/*  */}
 
-
-
-
-
-                                :
-
-                                null
-
-
-
-                    }
-
-
-
-                    {/*  */}
-
-                    <div id='paymentmethod' className='d-none'>
-                                                    <StripeCheckout
-                                                        token={onToken}
-                                                        // stripeKey="my_PUBLISHABLE_stripekey"
-                                                        stripeKey="pk_test_51LNt6zKhmRit377zkPatzgi9ckH1GU0kWpMkAUNU3BX3VucekD9bkV6QFodRelAmt7vDAgoIdpYUeGtuGWfQlcWr00bTsqA7Dl"
-                                                        // stripeKey="pk_test_51LNt6zKhmRit377zkPatzgi9ckH1GU0kWpMkAUNU3BX3VucekD9bkV6QFodRelAmt7vDAgoIdpYUeGtuGWfQlcWr00bTsqA7Dl"
-                                                        name='payment'
-                                                    />
-                                                </div>
-                </div>
-            </div>
+          <div id="paymentmethod" className="d-none">
+            <StripeCheckout
+              token={onToken}
+              // stripeKey="my_PUBLISHABLE_stripekey"
+              stripeKey="pk_test_51LNt6zKhmRit377zkPatzgi9ckH1GU0kWpMkAUNU3BX3VucekD9bkV6QFodRelAmt7vDAgoIdpYUeGtuGWfQlcWr00bTsqA7Dl"
+              // stripeKey="pk_test_51LNt6zKhmRit377zkPatzgi9ckH1GU0kWpMkAUNU3BX3VucekD9bkV6QFodRelAmt7vDAgoIdpYUeGtuGWfQlcWr00bTsqA7Dl"
+              name="payment"
+            />
+          </div>
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
-export default Dashboardecommerce
+export default Dashboardecommerce;

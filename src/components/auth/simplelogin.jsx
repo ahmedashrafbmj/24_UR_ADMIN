@@ -85,7 +85,7 @@ const Simplelogin = ({ Role }) => {
         // admin
         if (Role == "Admin") {
             var formdata = new FormData();
-            formdata.append("email", data.Email);
+            formdata.append("email", data?.Email);
             formdata.append("password", data.Password);
 
             var requestOptions = {
@@ -106,9 +106,11 @@ const Simplelogin = ({ Role }) => {
                     setLoader(false)
                     if (result.status == true) {
                     
-                        console.log(result)
+                       
                         localStorage.setItem('AdminToken', result.token);
+                        localStorage.setItem('Status', result.status);
                         console.log("status check==================", localStorage.getItem('AdminToken'))
+                        console.log(result,"result")
 
                         toast.success(result.message, {
                             position: "top-right",
@@ -120,9 +122,11 @@ const Simplelogin = ({ Role }) => {
                             progress: undefined,
                             theme: "light",
                         });
+                        Navigate('/dashboard')
+
 
                         if (Location.state !== null) {
-                            // console.log("Locationss",Location)
+                            console.log("Locationss",Location)
                             Navigate(`${Location.state.historyLocation}`)
                         }
                         else {
@@ -158,7 +162,7 @@ const Simplelogin = ({ Role }) => {
 
             var formdata = new FormData();
             formdata.append("email", data.Email);
-            formdata.append("password", data.Password);
+            formdata.append("password", data?.Password);
 
             var requestOptions = {
                 method: 'POST',
@@ -231,7 +235,7 @@ const Simplelogin = ({ Role }) => {
         else {
 
             var formdata = new FormData();
-            formdata.append("email", data.Email);
+            formdata.append("email", data?.Email);
             formdata.append("password", data.Password);
 
             var requestOptions = {
@@ -249,8 +253,10 @@ const Simplelogin = ({ Role }) => {
                 .then(result => {
                     setLoader(false)
                     if (result.status == true) {
-                        console.log(result)
+                        console.log(result,"result")
                         localStorage.setItem('SubAdminToken', result.token);
+                        localStorage.setItem('Userstatus', result.sub_status);
+                        localStorage.setItem('Useremail', result.data.email);
                         console.log("status check==================", localStorage.getItem('SubAdminToken'))
                         // SubadminStatus()
                         toast.success(result.message, {
