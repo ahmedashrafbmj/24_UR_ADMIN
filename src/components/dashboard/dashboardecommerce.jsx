@@ -35,8 +35,7 @@ const Dashboardecommerce = ({ Role }) => {
 
   useEffect(() => {
     GetCategoryData();
-    GetRole()
-   
+  
     // GetDataCounter()
   }, []);
   useEffect(() => {
