@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { AiFillCloseCircle,} from "react-icons/ai";
-import Baseurl from '../../Baseurl/Baseurl';
+import Baseurl from '../../Baseurl/Baseurl'
 import { Loader } from 'react-overlay-loader';
 import { useNavigate } from 'react-router-dom';
 const Addsubadmin = ({Role}) => {
