@@ -484,12 +484,12 @@ const Addsubadmin = ({Role}) => {
                                                         <div className="col-lg-6">
                                                    <div className="mb-1">
                                                       <h1 className='mt-4 mb-2' style={{fontWeight:"700"}} >Possible Diseases </h1>
-                                                       <h2 className="mb-0"> <b>Result</b> </h2>
-                                                       {/* <h2 className="mb-0"> <b>Result</b>  : {DataResultMsg} </h2> */}
+                                                       {/* <h2 className="mb-0"> <b>Result</b> </h2> */}
+                                                       <h2 className="mb-0"> <b>Result</b>  : {DataResultMsg} </h2>
                                                        {/* <small className="text-muted">The most basic list group is simply an unordered list with list items,
                                                            and the proper classes.</small> */}
                                                    </div>
-                                                   <div className="card">
+                                                   {/* <div className="card">
                                                        <ul className="list-group" id="basic-list-group">
                                                        {
                                                         ResultMessage?.map((data,index)=>{
@@ -501,9 +501,8 @@ const Addsubadmin = ({Role}) => {
                                                         })
                                                        }
 
-                                                           {/* <li className="list-group-item">{StoreResult}</li> */}
                                                        </ul>
-                                                   </div>
+                                                   </div> */}
                                                </div>
 
                                                     </div>
