@@ -85,7 +85,9 @@
 *,
 *::before,
 *::after {
-  box-sizing: border-box; }
+  box-sizing: border-box;
+
+}
 
 html {
   font-family: sans-serif;
@@ -3686,6 +3688,7 @@ button.close {
   min-height: calc(100% - (0.5rem * 2)); }
 
 .modal-content {
+  background: #00000069 !important;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -3724,7 +3727,9 @@ button.close {
 
 .modal-title {
   margin-bottom: 0;
-  line-height: 1.45; }
+  line-height: 1.45; 
+ color:#fff;
+}
 
 .modal-body {
   position: relative;

@@ -1037,7 +1037,11 @@ body.vertical-layout.vertical-menu.menu-expanded .main-menu-footer .content {
   transform: rotate(-45deg); }
 
 .pull-up {
-  transition: all 0.25s ease; }
+  transition: all 0.25s ease;
+  border-radius: 20px;
+  border: 1px solid rgb(205, 199, 199);
+  box-shadow: 2px 2px rgb(174, 171, 171);
+ }
   .pull-up:hover {
     transform: translateY(-4px) scale(1.02);
     box-shadow: 0px 14px 24px rgba(62, 57, 107, 0.2);

@@ -537,6 +537,8 @@ const Addsubadmin = ({Role}) => {
                                 placeholder="First Name"
                                 autoFocus
                                 onChange={(e) => handleInputChange(e, setFileUpload)}
+                                style={{background:"#ffffff47",color:"white"}}
+
                             />
                         </Form.Group>
                     </Form>
@@ -557,7 +559,7 @@ const Addsubadmin = ({Role}) => {
                 <Modal.Header >
                   
                     <Modal.Title>Add Symptoms </Modal.Title>
-                    <AiFillCloseCircle onClick={handleClose2} style={{ marginLeft: "160", cursor: "pointer" }} fontSize={40} />
+                    <AiFillCloseCircle onClick={handleClose2} style={{ marginLeft: "160", cursor: "pointer",color:"black", }} fontSize={40} />
 
                 </Modal.Header>
                 <Modal.Body>
@@ -572,6 +574,7 @@ const Addsubadmin = ({Role}) => {
                                  placeholder="Symptom"
                                  autoFocus
                                  onChange={(e)=>setAddsymptoms(e.target.value)}
+                                 style={{background:"#ffffff47",color:"white"}}
                               as="textarea" rows={3} />
                         </Form.Group>
                     </Form>
@@ -580,7 +583,7 @@ const Addsubadmin = ({Role}) => {
                     <Button variant="secondary" onClick={handleClose2}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={()=>AddSymptomsfun()} >
+                    <Button variant="primary" style={{background:"black"}} onClick={()=>AddSymptomsfun()} >
                         Submit 
                     </Button>
                 </Modal.Footer>
