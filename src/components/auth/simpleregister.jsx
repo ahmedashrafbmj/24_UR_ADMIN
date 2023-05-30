@@ -36,6 +36,7 @@ const Simpleregister = () => {
 
     const schema =yup.object().shape({
      Fname:yup.string().required(),
+     hname:yup.string().required(),
      Lname:yup.string().required(),
      Address:yup.string().required(),
      Email:yup.string().email().required(),
@@ -59,6 +60,7 @@ const Simpleregister = () => {
 
             var formdata = new FormData();
             formdata.append("fname",data.Fname);
+            formdata.append("hname",data.hname);
             formdata.append("lname", data.Lname);
             formdata.append("address", data.Address);
             formdata.append("contact", data.Contact);
@@ -152,12 +154,20 @@ const Simpleregister = () => {
                                     <div className="card-content">
                                         <div className="card-body">
                                             <form className="form-horizontal form-simple" onSubmit={handleSubmit(registerUser)} >
+                                            {errors.hname && <p style={{color:"red"}} >{errors.hname.message}</p> }
+                                                <fieldset className="form-group position-relative has-icon-left">
+                                                    <input type="text" className="form-control form-control-lg input-lg" {...register("hname")}  id="user-password" placeholder="Enter Hospital Name" required  onKeyDown={(e) => handleKeypress(e)}/>
+                                                    <div className="form-control-position">
+                                                        <i className="la la-key" />
+                                                    </div>
+                                                </fieldset>
                                                 <fieldset className="form-group position-relative has-icon-left mb-1">
                                                     <input type="text" className="form-control form-control-lg input-lg" {...register("Fname")}  id="user-fname" placeholder="First Name" onKeyDown={(e) => handleKeypress(e)} />
                                                     <div className="form-control-position">
                                                         <i className="ft-user" />
                                                     </div>
                                                 </fieldset>
+
                                                 {errors.Fname && <p style={{color:"red"}} >{errors.Fname.message}</p> }
                                                 <fieldset className="form-group position-relative has-icon-left mb-1">
                                                     <input type="text" className="form-control form-control-lg input-lg" {...register("Lname")}  id="user-lname" placeholder="Last Name" onKeyDown={(e) => handleKeypress(e)} />
