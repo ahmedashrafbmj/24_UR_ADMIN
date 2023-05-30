@@ -158,7 +158,7 @@ const Simpleregister = () => {
                                                 <fieldset className="form-group position-relative has-icon-left">
                                                     <input type="text" className="form-control form-control-lg input-lg" {...register("hname")}  id="user-password" placeholder="Enter Hospital Name" required  onKeyDown={(e) => handleKeypress(e)}/>
                                                     <div className="form-control-position">
-                                                        <i className="la la-key" />
+                                                    <i className="ft-user" />
                                                     </div>
                                                 </fieldset>
                                                 <fieldset className="form-group position-relative has-icon-left mb-1">
